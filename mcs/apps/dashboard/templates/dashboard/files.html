@@ -73,7 +73,9 @@
             data: {file_id: file_id},
 
             success: function (data) {
-                $('#' + file_id).html(data.status);
+                $('#' + file_id + '-status').html(data.status);
+{#                $('#' + file_id + '-action').html(data.status);#}
+{#                location.href = "{% url 'files' %}"#}
             }
         });
     };

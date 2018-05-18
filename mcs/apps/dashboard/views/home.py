@@ -19,7 +19,7 @@ def show_home(request):
     number_of_cloud = 0
     # Re-calculate total used and total quota
     for cloud in clouds:
-        lookup_utils.set_quota_cloud(cloud)
+        # lookup_utils.set_quota_cloud(cloud)
         lookup_utils.set_usage_cloud(cloud)
         total_quota += cloud.quota
         total_used += cloud.used

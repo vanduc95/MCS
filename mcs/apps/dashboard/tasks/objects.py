@@ -53,10 +53,18 @@ def upload_file(request, file, content):
     :param file: object of model File.
     :param content: content of file (stream
 .    """
+    # ring = RINGS[file.owner.username]
+    # node = ring.lookup(long(file.identifier))
+    # update_status_file(request, file.path, File.NOT_AVAILABLE)
+    # for cloud in node.clouds:
+    #     # Put task to queue 'default'
+    #     # _content = copy.deepcopy(content)
+    #     upload_object.delay(cloud, file)
+
     ring = RINGS[file.owner.username]
-    node = ring.lookup(long(file.identifier))
+    clouds = ring.lookup(long(file.identifier))
     update_status_file(request, file.path, File.NOT_AVAILABLE)
-    for cloud in node.clouds:
+    for cloud in clouds:
         # Put task to queue 'default'
         # _content = copy.deepcopy(content)
         upload_object.delay(cloud, file)
@@ -67,9 +75,9 @@ def download_file(file):
     :param file: object of model File.
     """
     ring = RINGS[file.owner.username]
-    node = ring.lookup(long(file.identifier))
+    clouds = ring.lookup(long(file.identifier))
     container = file.owner.username
-    for cloud in node.clouds:
+    for cloud in clouds:
         # Init cloud's connector
         connector = Client(version='1.0.0', resource='object_storage',
                            provider=cloud.provider)
@@ -87,8 +95,7 @@ def download_file(file):
         object_status = [object_stat[key]
                          for key in object_stat.keys() if 'status' in key]
         if object_status[0] == 'UPDATED':
-            file_content = connector.download_object(container,
-                                                     file.path.strip('/'))[stream_key]
+            file_content = connector.download_object(container, file.path.strip('/'))[stream_key]
             del connector
             gc.collect()
             if cloud.type == 'amazon':
@@ -100,16 +107,29 @@ def download_file(file):
 def set_status_file(request, file):
     """Check object's status then set file's status
     depend on it"""
+    # ring = RINGS[file.owner.username]
+    # node = ring.lookup(long(file.identifier))
+    # container = file.owner.username
+    # done = 0
+    # for cloud in node.clouds:
+    #     if get_status_object(cloud, container, file.path.strip('/')):
+    #         done += 1
+    # if 0 < done < len(node.clouds):
+    #     update_status_file(request, file.path, File.AVAILABLE)
+    # elif done == len(node.clouds):
+    #     update_status_file(request, file.path, File.UPDATE)
+
+
     ring = RINGS[file.owner.username]
-    node = ring.lookup(long(file.identifier))
+    clouds = ring.lookup(long(file.identifier))
     container = file.owner.username
     done = 0
-    for cloud in node.clouds:
+    for cloud in clouds:
         if get_status_object(cloud, container, file.path.strip('/')):
             done += 1
-    if 0 < done < len(node.clouds):
+    if 0 < done < len(clouds):
         update_status_file(request, file.path, File.AVAILABLE)
-    elif done == len(node.clouds):
+    elif done == len(clouds):
         update_status_file(request, file.path, File.UPDATE)
 
 
@@ -185,17 +205,17 @@ def delete_file(request, file):
     :param file: object of model File.
     """
     ring = RINGS[file.owner.username]
-    node = ring.lookup(long(file.identifier))
+    clouds = ring.lookup(long(file.identifier))
     container = file.owner.username
-    for cloud in node.clouds:
+    for cloud in clouds:
         connector = Client(version='1.0.0', resource='object_storage',
                            provider=cloud.provider)
         try:
             connector.delete_object(container, file.path.strip('/'))
-            messages.info(request, 'Delete file %(file)s from cloud %(cloud)s successfully!' % ({
-                'cloud': cloud.name,
-                'file': file.name
-            }))
+            # messages.info(request, 'Delete file %(file)s from cloud %(cloud)s successfully!' % ({
+            #     'cloud': cloud.name,
+            #     'file': file.name
+            # }))
         except Exception as e:
             messages.error(request, 'Delete file %(file)s from cloud %(cloud)s failed: %(error)s!' % ({
                 'cloud': cloud.name,

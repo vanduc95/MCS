@@ -16,6 +16,9 @@ from mcs.wsgi import RINGS
 def init_ring(request):
     """Init Ring per user"""
     # Setup pickle file path
+
+    print '11111111111111'
+
     username = request.user.username
     pickle_name = hashlib.md5(username).hexdigest()
     pickle_path = settings.MEDIA_ROOT + '/configs/' + pickle_name + '.pickle'

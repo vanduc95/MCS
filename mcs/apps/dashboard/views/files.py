@@ -135,9 +135,11 @@ def delete_files(request):
         filter(id__in=request.POST.getlist('checked_file'))
     # Delete the files -> Done
     for file in files:
+        print file
         if file.is_folder:
             continue
         objects.delete_file(request, file)
+    # delete in database
     files.delete()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
@@ -195,7 +197,7 @@ def download_file(request):
         get(id=request.POST.get('download_file'))
     file_content = objects.download_file(file)
     if file_content:
-        messages.info(request, 'Download file %s successfully!' % file.name)
+        # messages.info(request, 'Download file %s successfully!' % file.name)
         response = HttpResponse(file_content,
                                 content_type='application/octet-stream')
         response['Content-Disposition'] = 'attachment; filename=%s' % smart_str(file.name)
@@ -218,5 +220,6 @@ def refresh_status(request):
         4: 'NOT_AVAILABLE'
     }
     status = STATUS[file.status]
+    print status
     result = {'status': status}
     return JsonResponse(result)

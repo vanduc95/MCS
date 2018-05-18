@@ -1,6 +1,7 @@
 import hashlib
 import os
-
+from hashlib import md5
+from struct import unpack_from
 from django.conf import settings
 
 
@@ -45,8 +46,8 @@ def get_folder_by_path(jsondata, path, result):
 
 def generate_hash_key(str_to_hash):
     """Generate hash key for given string"""
-    return int(hashlib.md5(str_to_hash).hexdigest(), 16) % settings.RING_SIZE
-
+    # return int(hashlib.md5(str_to_hash).hexdigest(), 16) % settings.RING_SIZE
+    return unpack_from('>I',md5(str_to_hash).digest())[0] >> settings.PARTITION_SHIFT
 
 def sizeof_fmt(num, suffix='B'):
     """Size format"""

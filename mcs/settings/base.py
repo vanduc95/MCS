@@ -33,7 +33,8 @@ INSTALLED_APPS = [
 PROJECT_APPS = [
     'authentication',
     'dashboard',
-    'lookup',
+    # 'lookup',
+    'lookup_storage',
 ]
 
 INSTALLED_APPS += PROJECT_APPS

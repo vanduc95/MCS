@@ -35,7 +35,7 @@
     <td><p>{{ file.last_modified }}</p></td>
     <td><p>{{ file.size_format }}</p></td>
     <td>
-        <p id="{{ file.id }}">
+        <p id="{{ file.id }}-status">
             {% if file.status == 1 %}
                 UPDATE
             {% elif file.status == 2 %}
@@ -51,7 +51,7 @@
         <div class="text-center" style="width: 50%">
             <form id="download-form" action="{% url 'download_file' %}" method="POST">
                 {% csrf_token %}
-                <input type="hidden" name="download_file" value="{{ file.id }}">
+                <input type="hidden" name="download_file" value="{{ file.id }}" id="{{ file.id }}-action">
                 {% if file.status == 3 or file.status == 1 %}
                     <button type="submit" id="download_btn" class="btn btn-success" data-url="{% url 'download_file' %}"><span class="ti-download"></span></button>
                 {% else %}
