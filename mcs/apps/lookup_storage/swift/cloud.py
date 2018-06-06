@@ -12,10 +12,11 @@ class Cloud(object):
         self.type = type
         self.status = 'OK'
         self.username = username
-        self.provider = Provider(type, config)
+        self.provider = Provider('openstack', config)
         self.num_of_refs = 0
         self.quota = 0
         self.desired_parts = 0
+
 
     def set_used_rate(self):
         """Set used rate = used/quota"""

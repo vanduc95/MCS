@@ -76,7 +76,6 @@ def list_files(request, folder_id=None):
                                  'rfolder': 'upload_root_file',
                                  'afolder': 'upload_file'
                              })[1]
-    print url_create, url_upload, folder
 
     return render(request, 'dashboard/files.html',
                   {

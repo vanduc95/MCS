@@ -83,9 +83,12 @@ def set_usage_cloud(cloud):
         for obj in connector.list_container_objects(cloud.username):
             cloud.used += obj['bytes']
     elif cloud.type.lower() == 'amazon':
-        list_objects = connector.list_container_objects(cloud.username,
-                                                        prefix='',
-                                                        delimiter='')
-        if 'Contents' in list_objects:
-            for obj in list_objects['Contents']:
-                cloud.used += obj['Size']
+        # list_objects = connector.list_container_objects(cloud.username,
+        #                                                 prefix='',
+        #                                                 delimiter='')
+        # if 'Contents' in list_objects:
+        #     for obj in list_objects['Contents']:
+        #         cloud.used += obj['Size']
+
+        for obj in connector.list_container_objects(cloud.username):
+            cloud.used += obj['bytes']

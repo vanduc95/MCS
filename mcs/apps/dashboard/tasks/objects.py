@@ -89,17 +89,22 @@ def download_file(file):
 
         # Temporary handle.
         stream_key = 1
-        if cloud.type == 'amazon':
-            object_stat = object_stat['Metadata']
-            stream_key = 'Body'
+
+        # drop cause not cloud s3 amazon <if have s3, need uncomment>
+        # if cloud.type == 'amazon':
+        #     object_stat = object_stat['Metadata']
+        #     stream_key = 'Body'
+
+
         object_status = [object_stat[key]
                          for key in object_stat.keys() if 'status' in key]
+
         if object_status[0] == 'UPDATED':
             file_content = connector.download_object(container, file.path.strip('/'))[stream_key]
             del connector
             gc.collect()
-            if cloud.type == 'amazon':
-                return file_content.read()
+            # if cloud.type == 'amazon':
+            #     return file_content.read()
             return file_content
     return None
 

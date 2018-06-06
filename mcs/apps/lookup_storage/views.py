@@ -55,7 +55,6 @@ def init_ring(request):
 
                     for cloud in clouds:
                         cloud.set_weight(total_quota)
-                        print cloud.quota
 
                     ring = build_ring(clouds)
                     RINGS[username] = ring

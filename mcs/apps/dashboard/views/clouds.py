@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.http import JsonResponse
 
-from lookup import utils
+from lookup_storage import utils
 from mcs.wsgi import RINGS
 
 
@@ -17,7 +17,8 @@ def list_clouds(request):
         utils.set_usage_cloud(cloud)
         cloud.set_used_rate()
 
-    # clouds[len(clouds)].type =
+
+
 
     return render(request, 'dashboard/clouds.html',
                   {
